@@ -86,7 +86,7 @@ def buscar_maior_arvore(nuvem, mostrar_passos=True, pontos_para_desenhar=40000):
         )
 
         if mostrar_passos:
-            _desenhar_passo(nuvem, indices_da_amostra, candidato, quantidade, aceito, passo)
+            _desenhar_passo(nuvem, indices_da_amostra, arvore_espacial, candidato, quantidade, aceito, passo)
 
         if aceito:
             print(f"\n🏆 Árvore encontrada! Altura: {candidato[2]:.2f} metros, em {passo} passo(s).")
@@ -96,25 +96,33 @@ def buscar_maior_arvore(nuvem, mostrar_passos=True, pontos_para_desenhar=40000):
     return None
 
 
-def mostrar_resultado(nuvem, campea, pontos_para_desenhar=60000):
-    """Mostra um gráfico final destacando a árvore campeã dentro da nuvem inteira."""
+def mostrar_resultado(nuvem, campea, margem_metros=20.0):
+    """Mostra o perfil da floresta cortado pela largura do hemisfério testado
+    (mais uma margem para os lados), destacando a árvore campeã.
+    """
     if campea is None:
         print("Não há árvore campeã para mostrar.")
         return
 
-    indices_da_amostra = _amostra_para_desenho(nuvem, pontos_para_desenhar)
-    amostra = nuvem[indices_da_amostra]
+    meia_largura = RAIO_DO_HEMISFERIO_METROS + margem_metros
+    dentro_do_corte = np.abs(nuvem[:, 0] - campea[0]) <= meia_largura
+    pontos_do_corte = nuvem[dentro_do_corte]
 
-    plt.figure(figsize=(11, 5))
-    plt.scatter(amostra[:, 0], amostra[:, 2], s=1, color="yellowgreen", alpha=0.4, label="pontos da nuvem")
+    largura_da_base = 2 * meia_largura
+    altura_dos_dados = pontos_do_corte[:, 2].max() - pontos_do_corte[:, 2].min()
+    largura_da_figura = 7.0
+    altura_da_figura = largura_da_figura * (altura_dos_dados / largura_da_base)
+
+    plt.figure(figsize=(largura_da_figura, altura_da_figura))
+    plt.scatter(pontos_do_corte[:, 0], pontos_do_corte[:, 2], s=2, color="yellowgreen", alpha=0.5)
     plt.scatter(
         campea[0], campea[2], color="gold", edgecolor="black",
-        marker="*", s=500, zorder=5, label=f"árvore campeã ({campea[2]:.2f} m)",
+        marker="*", s=500, zorder=5,
     )
+    plt.gca().set_aspect("equal")
     plt.xlabel("posição ao longo da faixa (m)")
     plt.ylabel("altura acima do solo (m)")
     plt.title("A maior arvore encontrada na faixa")
-    plt.legend()
     plt.tight_layout()
     plt.show()
 
@@ -142,38 +150,48 @@ def _amostra_para_desenho(nuvem, quantidade):
     return gerador_aleatorio.choice(len(nuvem), size=quantidade, replace=False)
 
 
-def _desenhar_passo(nuvem, indices_da_amostra, candidato, quantidade, aceito, passo):
+def _desenhar_passo(nuvem, indices_da_amostra, arvore_espacial, candidato, quantidade, aceito, passo):
     amostra = nuvem[indices_da_amostra]
-    cor = "green" if aceito else "crimson"
+    cor = "darkgreen" if aceito else "crimson"
+
+    # A faixa toda tem quilômetros de comprimento, então sem um zoom na
+    # vizinhança do candidato o hemisfério (25 m de raio) fica microscópico
+    # e o círculo desaparece no gráfico da vista de cima.
+    janela = RAIO_DO_HEMISFERIO_METROS * 1.6
+    indices_locais = arvore_espacial.query_ball_point(candidato, r=janela)
+    pontos_locais = nuvem[indices_locais]
 
     figura, (perfil, topo) = plt.subplots(1, 2, figsize=(11, 4.5))
     figura.suptitle(f"Passo {passo} — altura testada: {candidato[2]:.2f} m   |   pontos no hemisfério: {quantidade}")
 
-    # Perfil lateral da floresta (visto de lado): posição X por altura Z.
+    # Perfil lateral da floresta (visto de lado): posição X por altura Z,
+    # com a nuvem inteira, para mostrar onde o candidato está na faixa toda.
     perfil.scatter(amostra[:, 0], amostra[:, 2], s=1, color="yellowgreen", alpha=0.4)
     perfil.scatter(candidato[0], candidato[2], color=cor, marker="*", s=250, zorder=5)
-    angulo = np.linspace(np.pi, 2 * np.pi, 100)  # só a metade de baixo do círculo
-    perfil.plot(
-        candidato[0] + RAIO_DO_HEMISFERIO_METROS * np.cos(angulo),
-        candidato[2] + RAIO_DO_HEMISFERIO_METROS * np.sin(angulo),
-        "--", color=cor,
-    )
     perfil.set_xlabel("posição ao longo da faixa (m)")
     perfil.set_ylabel("altura (m)")
     perfil.set_title("Perfil lateral da floresta")
 
     # Vista de cima: posição X por posição Y, com o círculo do hemisfério.
-    topo.scatter(amostra[:, 0], amostra[:, 1], s=1, color="yellowgreen", alpha=0.4)
+    topo.scatter(pontos_locais[:, 0], pontos_locais[:, 1], s=4, color="yellowgreen", alpha=0.6)
     topo.scatter(candidato[0], candidato[1], color=cor, marker="*", s=250, zorder=5)
     circulo = plt.Circle(
         (candidato[0], candidato[1]), RAIO_DO_HEMISFERIO_METROS,
         fill=False, linestyle="--", color=cor,
     )
     topo.add_patch(circulo)
+    topo.set_xlim(candidato[0] - janela, candidato[0] + janela)
+    topo.set_ylim(candidato[1] - janela, candidato[1] + janela)
     topo.set_aspect("equal")
     topo.set_xlabel("X (m)")
     topo.set_ylabel("Y (m)")
-    topo.set_title("Vista de cima")
+    topo.set_title("Vista de cima (zoom)")
 
     plt.tight_layout()
     plt.show()
+
+
+if __name__ == "__main__":
+    nuvem = carregar_nuvem()
+    campea = buscar_maior_arvore(nuvem, mostrar_passos=True)
+    mostrar_resultado(nuvem, campea)
