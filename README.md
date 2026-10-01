@@ -6,7 +6,7 @@ Um projeto para crianças descobrirem, passo a passo, como um algoritmo encontra
 
 ## Como abrir
 
-Abra o arquivo `sample.ipynb` no Jupyter/PyCharm e execute as células de cima para baixo, com `Shift + Enter`.
+Abra o arquivo `arvrona.ipynb` no Jupyter/PyCharm e execute as células de cima para baixo, com `Shift + Enter`.
 
 O notebook guia você por três passos:
 
