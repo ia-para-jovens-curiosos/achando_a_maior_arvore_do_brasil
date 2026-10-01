@@ -8,6 +8,8 @@ Um projeto para crianças descobrirem, passo a passo, como um algoritmo encontra
 
 Abra o arquivo `arvrona.ipynb` no Jupyter/PyCharm e execute as células de cima para baixo, com `Shift + Enter`.
 
+Prefere não instalar nada? Há uma versão para o **Google Colab**, que roda direto no navegador: [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ia-para-jovens-curiosos/achando_a_maior_arvore_do_brasil_colab/blob/main/arvrona.ipynb) (repositório: [achando_a_maior_arvore_do_brasil_colab](https://github.com/ia-para-jovens-curiosos/achando_a_maior_arvore_do_brasil_colab)).
+
 O notebook guia você por três passos:
 
 1. **Carregar a nuvem** — ler o arquivo `.laz` com mais de 1 milhão de pontos
