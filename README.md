@@ -1,6 +1,6 @@
 # 🌳 IA para Jovens Curiosos — Achando a Maior Árvore do Brasil
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-ia--para--jovens--curiosos%2Fachando__a__maior__arvore__do__brasil-blue?logo=github)](https://github.com/ia-para-jovens-curiosos/achando_a_maior_arvore_do_brasil)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-ia--para--jovens--curiosos%2Fachando__a__maior__arvore__do__brasil__jupyter-blue?logo=github)](https://github.com/ia-para-jovens-curiosos/achando_a_maior_arvore_do_brasil_jupyter)
 
 Um projeto para crianças descobrirem, passo a passo, como um algoritmo encontra a maior árvore do Brasil dentro de uma nuvem de pontos gerada por um laser (LiDAR) voando de avião sobre a floresta.
 
