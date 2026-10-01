@@ -4,3 +4,4 @@ __pycache__/
 .idea/
 log.txt
 .ipynb_checkpoints/
+/data/nuvem_de_pontos_orig.laz

@@ -35,7 +35,7 @@ Todo o `laspy`, `scipy` e `matplotlib` ficam escondidos dentro do arquivo `achan
 
 ## Dados
 
-O arquivo `data/nuvem_de_pontos_aula.laz` traz dois recortes da nuvem de pontos LiDAR completa: a região ao redor da árvore campeã e a região com os pontos "ruidosos" (passarinhos, ecos estranhos do laser) que o algoritmo testa e descarta antes de chegar lá. Esse recorte preserva exatamente os mesmos passos de busca da nuvem completa, só que num arquivo bem menor. Sistema de referência: SIRGAS 2000 / UTM zona 20S (EPSG:31980), alturas já normalizadas (altura acima do solo).
+O arquivo `data/nuvem_de_pontos_aula.laz` é uma faixa de ~100 m de largura (alargada para ~550 m só no trecho com os pontos "ruidosos") seguindo a linha de voo real do LiDAR, com cerca de 10,5 km de comprimento, cobrindo tanto a árvore campeã quanto os pontos ruidosos (passarinhos, ecos estranhos do laser) que o algoritmo testa e descarta antes de chegar lá. Esse recorte preserva exatamente os mesmos 151 passos de busca da nuvem completa (225 MB, ~40 milhões de pontos), só que num arquivo bem menor. Sistema de referência: SIRGAS 2000 / UTM zona 20S (EPSG:31980), alturas já normalizadas (altura acima do solo).
 
 ## Ambiente
 
